@@ -90,8 +90,8 @@ inline Vec3 operator/(const Vec3 &v, double t) {
 
 // dot product
 inline double dot(const Vec3 &u, const Vec3 &v) {
-    Vec3 vec_sum = u + v;
-    return vec_sum[0] + vec_sum[1] + vec_sum[2];
+    Vec3 vec_mult = u * v;
+    return vec_mult[0] + vec_mult[1] + vec_mult[2];
 }
 
 // cross product

@@ -12,10 +12,12 @@ int main() {
 
     // content
     for (int i = 0; i < image_height; i++) {
+        cerr << "\rScan lines remaining: " << image_height - i - 1 << ' ' << flush;
         for (int j = 0; j < image_width; j++) {
             cout << i << ' ' << j << ' ' << 100 << '\n';
         }
     }
+    cerr << "\nDone.\n";
 
     return 0;
 }

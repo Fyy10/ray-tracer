@@ -5,6 +5,7 @@
     - [The PPM Image Format](#the-ppm-image-format)
     - [Generate a Sample Image](#generate-a-sample-image)
     - [Convert to Other Formats](#convert-to-other-formats)
+  - [Draw a Background](#draw-a-background)
 
 A vanilla ray tracer implemented in C/C++.
 
@@ -58,3 +59,15 @@ Or, use `ImageMagick`:
 ```bash
 convert input.ppm output.png
 ```
+
+## Draw a Background
+
+```bash
+g++ background.cpp -o bg_gen -std=c++11
+./bg_gen > background.ppm
+convert background.ppm background.png
+```
+
+The generated background:
+
+![background](img/background.png)

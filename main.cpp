@@ -4,7 +4,20 @@
 #include "color.hpp"
 #include "ray.hpp"
 
+// check if the ray hits the sphere
+bool hit_sphere(const Point3 &center, double radius, const Ray &r) {
+    Vec3 A_C = r.origin() - center;
+    double a = dot(r.direction(), r.direction());
+    double b = 2.0 * dot(r.direction(), A_C);
+    double c = dot(A_C, A_C) - radius * radius;
+    double delta = b*b - 4*a*c;
+    return delta > 0;
+}
+
 Color ray_color(const Ray &r) {
+    // draw blue if the ray hits the sphere
+    if (hit_sphere(Point3(0, 0, -1), 0.5, r)) { return Color(0, 0, 1); }
+
     Vec3 unit_direction = unit_vector(r.direction());
     // t in the range (0, 1), increases as y increases
     double t = 0.5 * (unit_direction.y() + 1.0);

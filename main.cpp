@@ -4,23 +4,37 @@
 #include "color.hpp"
 #include "ray.hpp"
 
-// check if the ray hits the sphere
-bool hit_sphere(const Point3 &center, double radius, const Ray &r) {
+// Ray: P(t) = origin + t*dir
+// Sphere: (P - C) \cdot (P - C) = r^2
+// compute the closest hit point (smallest t)
+double hit_sphere(const Point3 &center, double radius, const Ray &r) {
     Vec3 A_C = r.origin() - center;
     double a = dot(r.direction(), r.direction());
     double b = 2.0 * dot(r.direction(), A_C);
     double c = dot(A_C, A_C) - radius * radius;
     double delta = b*b - 4*a*c;
-    return delta > 0;
+    if (delta < 0) {
+        return -1.0;
+    } else {
+        return (-b - sqrt(delta)) / (2.0*a);
+    }
 }
 
 Color ray_color(const Ray &r) {
-    // draw blue if the ray hits the sphere
-    if (hit_sphere(Point3(0, 0, -1), 0.5, r)) { return Color(0, 0, 1); }
+    Point3 center = Point3(0, 0, -1);
+    double t = hit_sphere(center, 0.5, r);
+    // if the ray hits the sphere
+    if (t > 0) {
+        // normal vector
+        Vec3 n = unit_vector(r.at(t) - center);
+        // x, y, z in the range (-1, 1)
+        return 0.5 * Color(n.x()+1, n.y()+1, n.z()+1);
+    }
 
+    // background (the ray does not hit the sphere)
     Vec3 unit_direction = unit_vector(r.direction());
     // t in the range (0, 1), increases as y increases
-    double t = 0.5 * (unit_direction.y() + 1.0);
+    t = 0.5 * (unit_direction.y() + 1.0);
     // interpolate wight (t=0) and sky blue (t=1)
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }

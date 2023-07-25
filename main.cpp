@@ -9,14 +9,15 @@
 // compute the closest hit point (smallest t)
 double hit_sphere(const Point3 &center, double radius, const Ray &r) {
     Vec3 A_C = r.origin() - center;
-    double a = dot(r.direction(), r.direction());
-    double b = 2.0 * dot(r.direction(), A_C);
-    double c = dot(A_C, A_C) - radius * radius;
-    double delta = b*b - 4*a*c;
+    double a = r.direction().length_squared();
+    // h = b/2
+    double h = dot(r.direction(), A_C);
+    double c = A_C.length_squared() - radius * radius;
+    double delta = h*h - a*c;
     if (delta < 0) {
         return -1.0;
     } else {
-        return (-b - sqrt(delta)) / (2.0*a);
+        return (-h - sqrt(delta)) / a;
     }
 }
 

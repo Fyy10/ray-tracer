@@ -32,6 +32,12 @@ inline double rand_double(double min, double max) {
     return min + (max-min)*rand_double();
 }
 
+inline double clamp(double x, double min, double max) {
+    if (x < min) return min;
+    if (x > max) return max;
+    return x;
+}
+
 // common headers
 #include "ray.hpp"
 #include "vec3.hpp"

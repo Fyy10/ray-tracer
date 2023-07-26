@@ -5,6 +5,7 @@
 #include "color.hpp"
 #include "sphere.hpp"
 #include "hittable_list.hpp"
+#include "camera.hpp"
 
 Color ray_color(const Ray &r, const HitTableList &world) {
     hit_record rec;
@@ -25,10 +26,11 @@ Color ray_color(const Ray &r, const HitTableList &world) {
 }
 
 int main() {
-    // image size
+    // image
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 100;
 
     // world
     HitTableList world;
@@ -36,14 +38,7 @@ int main() {
     world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // camera
-    double viewport_height = 2.0;
-    double viewport_width = aspect_ratio * viewport_height;
-    double focal_length = 1.0;
-
-    Point3 origin = Point3(0.0, 0.0, 0.0);
-    Vec3 horizontal = Vec3(viewport_width, 0, 0);
-    Vec3 vertical = Vec3(0, viewport_height, 0);
-    Point3 upper_left_corner = origin - horizontal / 2 + vertical / 2 - Vec3(0, 0, focal_length);
+    Camera camera;
 
     // ppm header
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -53,11 +48,14 @@ int main() {
     for (int i = 0; i < image_height; i++) {
         std::cerr << "\rScan lines remaining: " << image_height - i - 1 << ' ' << std::flush;
         for (int j = 0; j < image_width; j++) {
-            double u = double(j) / (image_width - 1);
-            double v = double(i) / (image_height - 1);
-            Ray r(origin, upper_left_corner + u*horizontal - v*vertical);
-            Color pixel_color = ray_color(r, world);
-            write_color(std::cout, pixel_color);
+            Color pixel_color(0, 0, 0);
+            for (int s = 0; s < samples_per_pixel; s++) {
+                double u = (j + rand_double()) / (image_width - 1);
+                double v = (i + rand_double()) / (image_height - 1);
+                Ray r = camera.get_ray(u, v);
+                pixel_color += ray_color(r, world);
+            }
+            write_color(std::cout, pixel_color, samples_per_pixel);
         }
     }
     std::cerr << "\nDone.\n";

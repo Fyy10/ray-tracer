@@ -6,6 +6,10 @@
     - [Generate a Sample Image](#generate-a-sample-image)
     - [Convert to Other Formats](#convert-to-other-formats)
   - [Draw a Background](#draw-a-background)
+  - [Usage](#usage)
+    - [Build](#build)
+    - [Run](#run)
+    - [Remove the Executable](#remove-the-executable)
 
 A vanilla ray tracer implemented in C/C++.
 
@@ -71,3 +75,30 @@ convert background.ppm background.png
 The generated background:
 
 ![background](img/background.png)
+
+## Usage
+
+### Build
+
+```bash
+git clone https://github.com/Fyy10/ray-tracer.git
+cd ray-tracer/
+make
+```
+
+### Run
+
+```bash
+./main > pic.ppm
+convert pic.ppm pic.png
+```
+
+Current image:
+
+![pic](img/pic.png)
+
+### Remove the Executable
+
+```bash
+make clean
+```

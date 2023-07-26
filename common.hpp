@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
+#include <random>
 
 // using
 using std::shared_ptr;
@@ -17,6 +18,18 @@ const double pi = 3.1415926535897932385;
 // utility functions
 inline double degrees_to_radians(double degrees) {
     return degrees * pi / 180.0;
+}
+
+inline double rand_double() {
+    // return a random real in [0, 1)
+    static std::uniform_real_distribution<double> dist(0.0, 1.0);
+    static std::mt19937 generator;
+    return dist(generator);
+}
+
+inline double rand_double(double min, double max) {
+    // return a random real in [min, max)
+    return min + (max-min)*rand_double();
 }
 
 // common headers

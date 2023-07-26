@@ -39,7 +39,9 @@ bool Sphere::hit(const Ray &r, double t_min, double t_max, hit_record &rec) cons
     // a valid root found, set hit record
     rec.t = root;
     rec.p = r.at(rec.t);
-    rec.normal = (rec.p - center) / radius;
+    Vec3 outward_normal = (rec.p - center) / radius;
+    rec.set_face_normal(r, outward_normal);
+    // rec.normal = (rec.p - center) / radius;
 
     return true;
 }

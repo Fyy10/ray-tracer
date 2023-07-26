@@ -1,17 +1,15 @@
 // generate the ppm image content, output as plain text
 #include <iostream>
-#include "vec3.hpp"
-#include "color.hpp"
-#include "ray.hpp"
-#include "sphere.hpp"
 
-Color ray_color(const Ray &r) {
-    Point3 center = Point3(0, 0, -1);
-    double radius = 0.5;
-    Sphere sphere(center, radius);
+#include "common.hpp"
+#include "color.hpp"
+#include "sphere.hpp"
+#include "hittable_list.hpp"
+
+Color ray_color(const Ray &r, const HitTableList &world) {
     hit_record rec;
-    // if the ray hits the sphere
-    if (sphere.hit(r, 0, 1, rec)) {
+    // if the ray hits any object in the world
+    if (world.hit(r, 0, infinity, rec)) {
         // normal vector
         Vec3 n = rec.normal;
         // x, y, z in the range (-1, 1)
@@ -31,6 +29,11 @@ int main() {
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    // world
+    HitTableList world;
+    world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // camera
     double viewport_height = 2.0;
@@ -53,7 +56,7 @@ int main() {
             double u = double(j) / (image_width - 1);
             double v = double(i) / (image_height - 1);
             Ray r(origin, upper_left_corner + u*horizontal - v*vertical);
-            Color pixel_color = ray_color(r);
+            Color pixel_color = ray_color(r, world);
             write_color(std::cout, pixel_color);
         }
     }

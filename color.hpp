@@ -9,9 +9,9 @@ void write_color(std::ostream &out, Color pixel_color, int samples_per_pixel=1) 
 
     // divide the color by the number of samples
     copied_pixel_color /= double(samples_per_pixel);
-    double r = copied_pixel_color.x();
-    double g = copied_pixel_color.y();
-    double b = copied_pixel_color.z();
+    double r = sqrt(copied_pixel_color.x());
+    double g = sqrt(copied_pixel_color.y());
+    double b = sqrt(copied_pixel_color.z());
 
     // write the translated [0, 255] value of each color component
     out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '

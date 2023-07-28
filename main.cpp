@@ -7,14 +7,21 @@
 #include "hittable_list.hpp"
 #include "camera.hpp"
 
-Color ray_color(const Ray &r, const HitTableList &world) {
+Color ray_color(const Ray &r, const HitTableList &world, int remaining_depth) {
     hit_record rec;
+    // if there is no remaining depth, no more light is gathered
+    // Color(0, 0, 0) is black
+    if (remaining_depth <= 0) {
+        return Color(0, 0, 0);
+    }
+
     // if the ray hits any object in the world
-    if (world.hit(r, 0, infinity, rec)) {
-        // normal vector
-        Vec3 n = rec.normal;
-        // x, y, z in the range (-1, 1)
-        return 0.5 * Color(n.x()+1, n.y()+1, n.z()+1);
+    if (world.hit(r, 0.0001, infinity, rec)) {
+        // generate random reflection rays
+        // Point3 target = rec.p + rec.normal + random_in_unit_sphere();
+        Point3 target = rec.p + rec.normal + random_unit_vector();
+        // Point3 target = rec.p + random_in_hemisphere(rec.normal);
+        return 0.5 * ray_color(Ray(rec.p, target - rec.p), world, remaining_depth-1);
     }
 
     // background (the ray does not hit the sphere)
@@ -31,6 +38,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
+    const int max_reflection_depth = 50;
 
     // world
     HitTableList world;
@@ -53,7 +61,7 @@ int main() {
                 double u = (j + rand_double()) / (image_width - 1);
                 double v = (i + rand_double()) / (image_height - 1);
                 Ray r = camera.get_ray(u, v);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_reflection_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }

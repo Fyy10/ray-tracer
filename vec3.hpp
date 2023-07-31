@@ -47,6 +47,12 @@ class Vec3 {
             return sqrt(length_squared());
         }
 
+        // return true if the vector is close to zero in all dimensions
+        bool near_zero() const {
+            double eps = 1e-8;
+            return (fabs(e[0]) < eps) && (fabs(e[1]) < eps) && (fabs(e[2]) < eps);
+        }
+
         // generate a random vector with 3 components in the range [0, 1)
         inline static Vec3 random() {
             return Vec3(rand_double(), rand_double(), rand_double());
@@ -136,6 +142,11 @@ Vec3 random_in_hemisphere(const Vec3 &normal) {
     } else {
         return -p;
     }
+}
+
+// compute the reflect vector according to the incident ray and surface normal
+Vec3 reflect(const Vec3 &v, const Vec3 &n) {
+    return v - 2*dot(v, n)*n;
 }
 
 #endif

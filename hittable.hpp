@@ -3,9 +3,12 @@
 
 #include "ray.hpp"
 
+class Material;
+
 struct hit_record {
     Point3 p;
     Vec3 normal;
+    shared_ptr<Material> mat_ptr;
     double t;
     bool front_face;
 

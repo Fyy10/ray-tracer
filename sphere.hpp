@@ -7,13 +7,14 @@
 class Sphere : public HitTable {
     public:
         Sphere() {}
-        Sphere(Point3 c, double r) : center(c), radius(r) {}
+        Sphere(Point3 c, double r, shared_ptr<Material> m) : center(c), radius(r), mat_ptr(m) {}
 
         virtual bool hit(const Ray &r, double t_min, double t_max, hit_record &rec) const override;
 
     public:
         Point3 center;
         double radius;
+        shared_ptr<Material> mat_ptr;
 };
 
 bool Sphere::hit(const Ray &r, double t_min, double t_max, hit_record &rec) const {
@@ -41,6 +42,7 @@ bool Sphere::hit(const Ray &r, double t_min, double t_max, hit_record &rec) cons
     rec.p = r.at(rec.t);
     Vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(r, outward_normal);
+    rec.mat_ptr = mat_ptr;
 
     return true;
 }

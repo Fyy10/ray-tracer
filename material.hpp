@@ -70,9 +70,17 @@ class Dielectric : public Material {
             double ratio = rec.front_face ? (1.0/ri) : ri;
 
             Vec3 unit_r_in = unit_vector(r_in.direction());
-            Vec3 refracted_dir = refract(unit_r_in, rec.normal, ratio);
+            Vec3 direction;
 
-            scattered = Ray(rec.p, refracted_dir);
+            // reflect according to the reflectance
+            double cos_theta = fmin(dot(-unit_r_in, rec.normal), 1.0);
+            if (reflectance(cos_theta, ratio) > rand_double()) {
+                direction = reflect(unit_r_in, rec.normal);
+            } else {
+                direction = refract(unit_r_in, rec.normal, ratio);
+            }
+
+            scattered = Ray(rec.p, direction);
             return true;
         }
 
@@ -80,6 +88,14 @@ class Dielectric : public Material {
         Color albedo;
         // refractive index
         double ri;
+
+    private:
+        // Schlick's Approximation
+        static double reflectance(double cos_theta, double n1_over_n2) {
+            double r0 = (1-n1_over_n2) / (1+n1_over_n2);
+            r0 = r0 * r0;
+            return r0 + (1-r0) * pow(1-cos_theta, 5);
+        }
 };
 
 #endif

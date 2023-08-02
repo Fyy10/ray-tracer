@@ -55,4 +55,31 @@ class Metal : public Material {
         double fuzz;
 };
 
+class Dielectric : public Material {
+    public:
+        Dielectric(const Color &a, double n) : albedo(a), ri(n) {}
+        Dielectric(double n) : ri(n) {
+            // white
+            albedo = Color(1, 1, 1);
+        }
+
+        virtual bool scatter(
+            const Ray &r_in, const hit_record &rec, Color &attenuation, Ray &scattered
+        ) const override {
+            attenuation = albedo;
+            double ratio = rec.front_face ? (1.0/ri) : ri;
+
+            Vec3 unit_r_in = unit_vector(r_in.direction());
+            Vec3 refracted_dir = refract(unit_r_in, rec.normal, ratio);
+
+            scattered = Ray(rec.p, refracted_dir);
+            return true;
+        }
+
+    public:
+        Color albedo;
+        // refractive index
+        double ri;
+};
+
 #endif

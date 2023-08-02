@@ -149,4 +149,21 @@ Vec3 reflect(const Vec3 &v, const Vec3 &n) {
     return v - 2*dot(v, n)*n;
 }
 
+// compute the refract vector according to the incident ray and surface normal
+// return the reflect vector if total reflection happens
+Vec3 refract(const Vec3 &v, const Vec3 &n, double n1_over_n2) {
+    double cos_theta = fmin(dot(-v, n), 1.0);
+    double sin_theta = sqrt(fabs(1 - cos_theta * cos_theta));
+
+    if (sin_theta * n1_over_n2 > 1.0) {
+        // total reflection
+        return reflect(v, n);
+    }
+
+    // regular refraction
+    Vec3 r_perp = n1_over_n2 * (v + cos_theta * n);
+    Vec3 r_par = -sqrt(fabs(1 - r_perp.length_squared())) * n;
+    return r_perp + r_par;
+}
+
 #endif

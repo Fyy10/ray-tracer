@@ -59,7 +59,12 @@ int main() {
     world.add(make_shared<Sphere>(Point3(1, 0, -1), 0.5, material_right));
 
     // camera
-    Camera camera(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 20.0, aspect_ratio);
+    Point3 look_from(3, 3, 2);
+    Point3 look_at(0, 0, -1);
+    Vec3 vup(0, 1, 0);
+    double aperture = 1.5;
+    double focus_dist = (look_at - look_from).length();
+    Camera camera(look_from, look_at, vup, 20.0, aspect_ratio, aperture, focus_dist);
 
     // ppm header
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";

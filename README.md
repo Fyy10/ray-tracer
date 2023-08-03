@@ -10,6 +10,7 @@
     - [Build](#build)
     - [Run](#run)
     - [Remove the Executable](#remove-the-executable)
+  - [Progress](#progress)
 
 A vanilla ray tracer implemented in C/C++.
 
@@ -93,12 +94,31 @@ make
 convert pic.ppm pic.png
 ```
 
-Current image:
+The rendered image:
 
 ![pic](img/pic.png)
+
+The code runs extremely slow (takes around 18 hours to produce a single 1200x800 image on my linux server with an Intel Core i3-530 CPU). GPU acceleration is important (not implemented yet).
 
 ### Remove the Executable
 
 ```bash
 make clean
 ```
+
+## Progress
+
+- [x] 3D Vectors, 3D Points, Color
+- [x] Rays, Basic Camera, and Background
+- [x] Sphere Objects
+  - [x] Surface Normal
+  - [x] Hit Table and Multiple Objects
+- [x] Antialiasing
+- [x] Materials
+  - [x] Diffuse Material
+  - [x] Metal
+  - [x] Dielectrics
+- [x] Positionable Camera
+- [x] Defocus Blur
+- [x] Random Scene
+- [ ] Parallel Acceleration for Rendering
